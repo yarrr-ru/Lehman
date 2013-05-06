@@ -59,9 +59,10 @@ int main() {
   }*/
 
   while(std::cin >> num_str) {
+    // HELLO CONSTRUCTORS
     num = stringToBigInteger(num_str);
 
-    assert(num > 0);
+    assert(num > 1);
     
     std::vector < num_t > factors;
 
