@@ -28,30 +28,53 @@ namespace
   };
 
   template < typename T, int P >
-  T root(const T& a_num)
+  struct rooter
   {
-    assert(a_num >= 0);
+    static T root(const T& a_num)
+    {
+      assert(a_num >= 0);
 
-    T l = 0, r = a_num + 1;
+      T l = 0, r = a_num + 1;
 
-    while(r - l > 1) {
-      T m = (l + r) / 2, m_powed = power < T, P > :: pow(m);
+      while(r - l > 1) {
+        T m = (l + r) / 2, m_powed = power < T, P > :: pow(m);
 
-      if(m_powed <= a_num)
-        l = m;
-      else
-        r = m;
+        if(m_powed <= a_num)
+          l = m;
+        else
+          r = m;
+      }
+    
+      return l;
     }
+  };
 
-    return l;
-  }
+  template < typename T >
+  struct rooter < T, 2 >
+  {
+    static T root(const T& a_num)
+    {
+      T x = 1;
+      bool decreased = false;
+      
+      while(true) {
+        T nx = (x + a_num / x) / 2;
+        if(x == nx || (nx > x && decreased))
+          break;
+        decreased |= (nx < x);
+        x = nx;
+      }
+
+      return x;
+    }
+  };
 
   template < typename T >
   bool is_perfect_square(const T& a_num)
   {
     assert(a_num >= 0);
 
-    const T r = root < T, 2 > (a_num);
+    const T r = rooter < T, 2 > :: root(a_num);
     return r * r == a_num;
   }
 
@@ -73,7 +96,7 @@ class Lehman
   public:
     void first_step(const T& a_num, std::vector < T > & a_res)
     {
-      const T limit = root < T, 3 > (a_num);
+      const T limit = rooter < T, 3 > :: root (a_num);
     
       for(T i = 2; i <= limit; ++i) {
         if(a_num % i == 0) {
@@ -86,18 +109,18 @@ class Lehman
 
     void second_step(T& n, std::vector < T > & a_res)
     {
-      const T k_limit = root < T, 3 > (n);
+      const T k_limit = rooter < T, 3 > :: root (n);
  
       for(T k = 1; k <= k_limit; ++k) {
-        const T d_limit = (root < T, 6 > (n) / (T(4) * root < T, 2 > (k))) + 1;
+        const T d_limit = (rooter < T, 6 > :: root (n) / (T(4) * rooter < T, 2 > :: root (k))) + 1;
       
         const T v = T(4) * k * n;
 
-        for(T d = 0, A = root < T, 2 > (v), AA = A * A; d <= d_limit; ++d, AA += T(2) * A + T(1), ++A) {
+        for(T d = 0, A = rooter < T, 2 > :: root (v), AA = A * A; d <= d_limit; ++d, AA += T(2) * A + T(1), ++A) {
           const T c = AA - v;
 
           if(c >= 0 && is_perfect_square < T > (c)) {
-            const T B = root < T, 2 > (A * A - v);
+            const T B = rooter < T, 2 > :: root (A * A - v);
 
             if((A * A) % n == (B * B) % n) {
               assert(A > B);
