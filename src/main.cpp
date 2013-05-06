@@ -70,6 +70,7 @@ int main() {
     factorizer(num, factors);
 
     // output
+    // 1 (prime) or 2 (composite) factors
     std::cout << "Factors of " << num << ": " << vector_to_string(factors) << std::endl;
   }
 
