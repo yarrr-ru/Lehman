@@ -54,7 +54,10 @@ namespace
   {
     static T root(const T& a_num)
     {
-      assert(a_num > 0);
+      assert(a_num >= 0);
+
+      if(a_num == 0)
+        return T(0);
 
       T x = 1;
       bool decreased = false;
