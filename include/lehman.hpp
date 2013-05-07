@@ -54,6 +54,8 @@ namespace
   {
     static T root(const T& a_num)
     {
+      assert(a_num > 0);
+
       T x = 1;
       bool decreased = false;
       
@@ -109,14 +111,14 @@ class Lehman
 
     void second_step(T& n, std::vector < T > & a_res)
     {
-      const T k_limit = rooter < T, 3 > :: root (n);
- 
-      for(T k = 1; k <= k_limit; ++k) {
-        const T d_limit = (rooter < T, 6 > :: root (n) / (T(4) * rooter < T, 2 > :: root (k))) + 1;
-      
-        const T v = T(4) * k * n;
+      const T k_limit = rooter < T, 3 > :: root (n),
+            d_top = (rooter < T, 6 > :: root (n));
 
-        for(T d = 0, A = rooter < T, 2 > :: root (v), AA = A * A; d <= d_limit; ++d, AA += T(2) * A + T(1), ++A) {
+      for(T k = 1; k <= k_limit; ++k) {
+        const T d_limit = (d_top / (T(4) * rooter < T, 2 > :: root (k))) + 1, 
+                v = T(4) * k * n;
+
+        for(T d = 0, A = rooter < T, 2 > :: root (v), AA = A * A; d <= d_limit; ++d, AA += A + A + T(1), ++A) {
           const T c = AA - v;
 
           if(c >= 0 && is_perfect_square < T > (c)) {
